@@ -5,10 +5,12 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag'; 
 import { ProductService } from './product.service';
 import { Product } from './product';
+import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,ButtonModule,TableModule,TagModule],
+  imports: [RouterOutlet,ButtonModule,TableModule,TagModule, SharedModule, AuthModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

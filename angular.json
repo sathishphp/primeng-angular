@@ -30,10 +30,11 @@
               "src/assets"
             ],
             "styles": [
+              "src/styles.scss",
               "src/assets/vendor/bootstrap-icons/bootstrap-icons.css",
-              "node_modules/primeng/resources/themes/md-light-indigo/theme.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "src/styles.scss"              
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css"            
             ],
             "scripts": [
               "src/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
