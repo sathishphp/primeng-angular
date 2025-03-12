@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Employee } from '../../models';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +15,18 @@ import { Observable } from 'rxjs';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   requestData$!: Observable<any>;
-  users!: any[];
+  users:Employee[] = [];
+  data: any[] = [];
   selectedUser: any | undefined;
   submitted = false;
-
+  isLoading: boolean = false;
+  private unsubscribe: Subject<void> = new Subject<void>();
+  
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService,
+    private router:Router
   ) {
 
   }
@@ -39,16 +48,28 @@ export class LoginComponent implements OnInit {
   }
 
   loadUsers() {
-    this.users = [
-      { name: 'Intes', id: 1 },
-      { name: 'Admin', code: 2 },
-      { name: 'MD', code: 3 },
-    ];
+    this.authService.getEmployeesList().subscribe((res:any)=>{
+      this.users = res.data || [];
+    })
   }
 
   login() {
     this.submitted = true;
-    console.log(this.loginForm.value)
-    //this.authService.login()
+    console.log(this.loginForm);
+    const {username,password} = this.loginForm.value;
+    if(!username && !password){
+      return;
+    }
+
+    this.authService.login(username.employee_code,password).subscribe((res)=>{
+      if(res.data.length > 0){
+        this.router.navigate(['/dashboard']);
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 }

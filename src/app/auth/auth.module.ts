@@ -8,6 +8,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { ReactiveFormsModule } from '@angular/forms';
 import { PrimengModule } from '../shared/primeng/primeng.module';
 import { AuthService } from './services/auth.service';
+import { CoreModule } from '../core/core.module';
 
 const modules= [
   LoginComponent,
@@ -20,6 +21,7 @@ const modules= [
     CommonModule,
     ReactiveFormsModule,
     PrimengModule,
+    CoreModule,
     AuthRoutingModule
   ],
   exports:[...modules],

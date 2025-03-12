@@ -1,0 +1,75 @@
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Create Company</h5>
+                    <form (ngSubmit)="saveCompany()" [formGroup]="companyForm" class="needs-validation">
+                        <div class="form-row">
+                            <div class="form-group required col-md-6">
+                                <label  class="control-label">Company Code</label>
+                                <input type="text" class="form-control" formControlName="company_code" required
+                                    [ngClass]="{ 'is-invalid': submitted && f.company_code.errors }">
+                                @if (submitted && f.company_code.errors) {
+                                <div class="invalid-feedback">
+                                    @if (f.company_code.errors.required) {
+                                    <div>Company Code cannot be blank.</div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Company Name (English)</label>
+                                <input type="text" class="form-control" formControlName="company_name_eng" required
+                                    [ngClass]="{ 'is-invalid': submitted && f.company_name_eng.errors }">
+                                @if (submitted && f.company_name_eng.errors) {
+                                <div class="invalid-feedback">
+                                    @if (f.company_name_eng.errors.required) {
+                                    <div>Company Name (English) cannot be blank.</div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Address</label>
+                                <textarea rows="2" cols="15" class="form-control" formControlName="address"></textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>City</label>
+                                <input type="text" class="form-control" formControlName="city">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Pin Code</label>
+                                <input type="text" class="form-control" formControlName="pin_code">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Email</label>
+                                <input type="text" class="form-control" formControlName="email" required
+                                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                                @if (submitted && f.email.errors) {
+                                <div class="invalid-feedback">
+                                    @if (f.email.errors.required) {
+                                    <div>Email cannot be blank.</div>
+                                    }
+                                    @if (f.email.errors.email) {
+                                    <div>Email is not a valid email address.</div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Submit</button>&nbsp;
+                            <button type="reset" class="btn btn-secondary" (click)="gotoList()">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

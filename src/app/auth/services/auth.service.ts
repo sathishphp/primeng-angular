@@ -1,7 +1,9 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+import { environment } from '../../../environment/environment';
+import { Employee } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -25,17 +27,21 @@ export class AuthService {
     return this.userDataSubject.value
   }
   
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`localhost:3000/auth/login`, { email, password }).pipe(
+  login(employee_code: string, password: string): Observable<any> {
+    return this.http.post(`${environment.API_BACKEND_POINT}/auth/login`, { employee_code, password }).pipe(
       map((res: any) => {
-        const access_token = res?.data?.access_token;
-        const refresh_token = res?.data?.refresh_token;
+        const access_token = res?.data[0]?.access_token;
+        const refresh_token = res?.data[0]?.refresh_token;
         this.userDataSubject.next({access_token, refresh_token, userInfo: this.getUserDataFromToken(access_token)});
         localStorage.setItem(this.ACCESS_TOKEN, access_token)
         localStorage.setItem(this.REFRESH_TOKEN, refresh_token)
         return res
       })
     )
+  }
+
+  getEmployeesList():Observable<Employee[]>{
+    return this.http.get<Employee[]>(`${environment.API_BACKEND_POINT}/auth/emp-list`).pipe(catchError(this.handleError));
   }
   
   logout(): void {
@@ -47,7 +53,7 @@ export class AuthService {
   
   generateNewTokens(): Observable<HttpEvent<any>> {
     const refresh_token = this.userDataSubject.value?.refresh_token;
-    return this.http.post(`localhost:3000/auth/refresh`, { refresh_token }).pipe(
+    return this.http.post(`${environment.API_BACKEND_POINT}/auth/refresh-token`, { refresh_token }).pipe(
       map((res: any) => {
         const access_token = res?.data?.access_token;
         const refresh_token = res?.data?.refresh_token;
@@ -79,6 +85,19 @@ export class AuthService {
   
   getUserDataFromToken(token: string): any {
     const decoded: any = jwtDecode(token);
-    return decoded.data
+    return decoded;
+  }
+
+  handleError(error: any) {
+    let errorMessage = "";
+    if (error.error instanceof ErrorEvent) {
+        // client-side error
+        errorMessage = `Error: ${error.error.message}`;
+    } else {
+        // server-side error
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(() => new Error(errorMessage))
   }
 }

@@ -8,10 +8,25 @@
                     <!-- Vertical Form -->
                     <form class="row g-3" [formGroup]="loginForm" (ngSubmit)="login()">
                         <div class="col-12">
-                            <p-dropdown formControlName="username" [options]="users" [(ngModel)]="selectedUser"
-                                [style]="{'minWidth':'100%'}" optionLabel="name" [showClear]="true" [filter]="true"
-                                filterBy="name" [showClear]="true" placeholder="Select Users" />
-
+                            @if (submitted && f.username) {
+                                <p>{{f}}</p>
+                            }
+                            <!-- <p-dropdown formControlName="username" [options]="users" [(ngModel)]="selectedUser"
+                                [style]="{'minWidth':'100%'}" optionLabel="employee_name_eng" [showClear]="true" [filter]="true"
+                                filterBy="name" [showClear]="true" placeholder="Select Users" /> -->
+                            <select class="form-control" formControlName="username" required [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+                                <option value="">Select Users</option>
+                                @for (item of users; track $index) {
+                                    <option [ngValue]="item">{{item.employee_name_eng}}-({{item.employee_code}})</option>
+                                }
+                            </select>    
+                            @if (submitted && f.username.errors) {
+                                <div class="invalid-feedback">
+                                    @if (f.username.errors.required) {
+                                    <div>Username is required</div>
+                                    }
+                                </div>
+                            }
                         </div>
                         <div class="col-12">
                             <input type="password" formControlName="password" class="form-control" required
@@ -25,7 +40,7 @@
                             }
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary w-100" type="submit" [disabled]="loginForm.invalid">
+                            <button class="btn btn-primary w-100" type="submit">
                                 <i class="bi bi-box-arrow-in-right"></i>
                                 Login
                             </button>
