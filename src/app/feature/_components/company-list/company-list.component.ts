@@ -9,6 +9,7 @@ import { DEFAULT_VALUES } from '../../../constants';
 import { PDatatableComponent } from '../../../shared/p-datatable/p-datatable.component';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-company-list',
   standalone: true,
@@ -79,6 +80,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     private _masterService: MasterService,
     private _toastr: ToastrService,
     private _confirmationService: ConfirmationService,
+    private router:Router
   ) {
 
   }
@@ -108,10 +110,9 @@ export class CompanyListComponent implements OnInit, OnDestroy {
   }
 
   performBtnAction(event: any) {
-    console.log(event.action, event.row);
     switch (event.action) {
       case 'Edit':
-
+        this.router.navigate(['/master/company-edit/'+event.row.company_id]);
         break;
       case 'Flag':
         this.updateStatus(event.row);
@@ -134,27 +135,29 @@ export class CompanyListComponent implements OnInit, OnDestroy {
 
   confirmPopup(event: any, row: any){
     this._confirmationService.confirm({
-      target: event.target as EventTarget,
       message: 'Do you want to delete this record?',
       header: 'Delete Confirmation',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: "p-button-danger p-button-text",
-      rejectButtonStyleClass: "p-button-text p-button-text",
       acceptIcon: "none",
       rejectIcon: "none",
+      rejectButtonStyleClass: 'p-button-text btn-primary',
+      acceptButtonStyleClass: 'p-button-text btn-primary',
       accept: () => {
-        this.deleteCompany(event,row);
+        this.deleteCompany(row);
       },
       reject: () => {
-        //this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+        //this._messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
       }
     });
   }
 
-  deleteCompany(event: any, row: any) {
+  deleteCompany(row: any) {
     this._masterService.removeCompany(row.company_id).pipe(takeUntil(this.unsubscribe)).subscribe((res)=>{
-      console.log(res);
       this._toastr.success("Company details has been removed Successfully", 'Success');
+      this.loadCompanyList();
     })
+  }
+
+  navigateToCreateCompany(){
+    this.router.navigate(['/master/company-create']);
   }
 }

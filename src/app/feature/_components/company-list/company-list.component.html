@@ -69,17 +69,27 @@
     </ng-template>
 </p-table>
  -->
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col text-start">
+                <h5 class="card-title">Manage Company</h5>
+            </div>
+            <div class="col text-right pt-5">
+                <button type="submit" class="btn btn-primary" (click)="navigateToCreateCompany()">Create
+                    Company</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <app-p-datatable #dataTable [tableId]="tableId" [pageLength]="paging.totalRecords"
+                    [pageNumber]="paging.page" [columnKeys]="columnKeys" [rows]="10" [sortField]="sortField"
+                    [rowsPerPageOptions]="[10, 25, 50]" [data]="companyVO"
+                    (performGlobalAction)="performBtnAction($event)">
+                </app-p-datatable>
+                <p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000"></p-confirmDialog>
+            </div>
 
-<app-p-datatable 
-    #dataTable
-    [tableId]="tableId"
-    [pageLength]="paging.totalRecords"
-    [pageNumber]="paging.page"
-    [columnKeys]="columnKeys"
-    [rows]="10"
-    [sortField]="sortField" 
-    [rowsPerPageOptions]="[10, 25, 50]" 
-    [data]="companyVO"
-    (performGlobalAction)="performBtnAction($event)"
->
-</app-p-datatable>
+        </div>
+    </div>
+</div>
