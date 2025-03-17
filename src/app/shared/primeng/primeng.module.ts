@@ -46,6 +46,7 @@ import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { AutoFocusModule } from 'primeng/autofocus';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 const modules = [
@@ -100,7 +101,8 @@ const modules = [
         AnimateModule,
         CardModule,
         RippleModule,
-        AutoFocusModule
+        AutoFocusModule,
+        ToggleButtonModule
 ];
 
 

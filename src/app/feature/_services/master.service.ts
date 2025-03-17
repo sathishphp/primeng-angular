@@ -19,6 +19,22 @@ export class MasterService {
     return this.http.get<Company[]>(environment.API_BACKEND_POINT+'/company/list').pipe(catchError(this.handleError));
   }
 
+  getCompanyListById(id:any):Observable<Company[]>{
+    return this.http.get<Company[]>(environment.API_BACKEND_POINT+'/company/list/'+id).pipe(catchError(this.handleError));
+  }
+
+  updateCompany(id:any,postObj:any):Observable<Company[]>{
+    return this.http.put<Company[]>(environment.API_BACKEND_POINT+'/company/update/'+id,postObj).pipe(catchError(this.handleError));
+  }
+
+  updateCompanyStatus(id:any,postObj:any):Observable<Company[]>{
+    return this.http.put<Company[]>(environment.API_BACKEND_POINT+'/company/update-status/'+id,postObj).pipe(catchError(this.handleError));
+  }
+
+  removeCompany(id:any):Observable<Company[]>{
+    return this.http.get<Company[]>(environment.API_BACKEND_POINT+'/company/delete/'+id).pipe(catchError(this.handleError));
+  }
+
   handleError(error: any) {
       let errorMessage = "";
       if (error.error instanceof ErrorEvent) {

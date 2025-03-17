@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MasterService } from '../../_services/master.service';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-company',
@@ -47,11 +48,16 @@ export class CompanyComponent implements OnInit,OnDestroy {
     if(this.companyForm.invalid){
       return;
     }
-  this._masterService.saveCompany(this.companyForm.value).subscribe((res)=>{
-      if(res.length > 0){
+  this._masterService.saveCompany(this.companyForm.value).subscribe((res:any)=>{
+      if(res && res.length > 0){
         this._toastr.success("Company Details Saved Successfully.",'Success');
         this.gotoList();
       }
+      if(res.status === 400){
+        this._toastr.error(res.message,'Error');
+      }
+    },(err)=>{
+      this._toastr.error(err.message,'Error');
     });
   }
 

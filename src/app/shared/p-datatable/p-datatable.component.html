@@ -1,0 +1,118 @@
+<!-- <p-table
+  [value]="pTableSetting.rows"
+  [columns]="pTableSetting.columns"
+  [resizableColumns]="true"
+  columnResizeMode="expand"
+  styleClass="p-datatable-gridlines"
+  [scrollable]="true"
+  sortMode="multiple"
+  [customSort]="true"
+  [resetPageOnSort]="false"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th
+        *ngFor="let col of columns"
+        [pSortableColumn]="col.field"
+      >
+        <div class="p-d-flex p-jc-between p-ai-center">
+          {{ col.title }}
+          <span *ngIf="col.enabledSetting.hasSorting">
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </span>
+          <span *ngIf="col.enabledSetting.hasFiltering">
+            
+          </span>
+        </div>
+      </th>
+      <th *ngIf="hasActionColumn()" alignFrozen="right" pFrozenColumn>
+        Actions
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns">
+        {{ rowData[col.field] }}
+      </td>
+      <td
+        *ngIf="hasActionColumn()"
+        
+        alignFrozen="right"
+        pFrozenColumn
+      >
+        <span *ngFor="let actionColumn of pTableSetting.actionColumns">
+          <button
+            class="btn btn-sm"
+            type="button"
+            [disabled]="false"
+            (click)="onClickActionColumn(actionColumn.action, rowData)"
+          >
+          </button>
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+</p-table> -->
+
+<div class="card">
+  <p-table #dt [rows]=rows [rowsPerPageOptions]="rowsPerPageOptions" [paginator]="true" [value]="data"
+    styleClass="p-datatable-gridlines p-datatable-sm" [sortOrder]=sortOrder [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        @for (column of columnKeys; track column.field;) {
+        <th [ngStyle]="{'width':column?.width}" [pSortableColumn]="column?.field">
+          {{column.header}}
+          @if (column?.sortable) {
+          <p-sortIcon [field]="column?.field" />
+          }
+        </th>
+        }
+      </tr>
+      <tr>
+        @if (individualColFilter) {
+        @for (column of columnKeys; track column.field;let i = $index) {
+        @if (column.field !=='Actions') {
+        <th>
+          <input type="text" class="form-control" placeholder="Search..." #textInput1
+            (input)="dt.filter(textInput1.value, column.field,'contains')">
+        </th>
+        }
+        }
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columnKeys" let-rowIndex="rowIndex">
+      <tr>
+        @for(column of columnKeys; track column.field) {
+        @switch(column.type) {
+        <!-- Column Type : Action Button -->
+        @case('actionButton') {
+        <td [ngStyle]="{'width':column?.width}">
+          @for(actionbtn of column.selectOptions;track actionbtn.action){
+          @switch (actionbtn.label) {
+          @case('Flag') {
+          <button type="button" (click)="performAction(actionbtn.label, rowData)" class="btn btn-primary">
+            <i [ngClass]="(rowData['flag'] === 1)?'pi pi-check' :'pi pi-times'" title="{{(rowData['flag'] === 1)?'Deactivate' :'Activate'}}"></i>
+          </button>
+          }
+          @default {
+          <button type="button" (click)="performAction(actionbtn.label, rowData)" class="btn btn-primary">
+            <i class="{{actionbtn.icon}}" title="{{actionbtn.label}}"></i>
+          </button>
+          }
+          }
+
+          }
+        </td>
+        }
+        @default {
+        <td>{{ rowData[column.field] }}</td>
+        }
+        }
+        }
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
